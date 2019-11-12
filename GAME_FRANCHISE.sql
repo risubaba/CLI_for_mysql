@@ -30,7 +30,7 @@ DROP TABLE IF EXISTS `employee`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `employee` (
-  `employee_id` int(11) NOT NULL,
+  `employee_id` varchar(50) NOT NULL,
   `name` varchar(50) NOT NULL,
   `email_address` varchar(50) NOT NULL,
   `salary` int(10) NOT NULL,
@@ -40,22 +40,34 @@ CREATE TABLE `employee` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+LOCK TABLES `employee` WRITE;
+/*!40000 ALTER TABLE `employee` DISABLE KEYS */;
+INSERT INTO `employee` VALUES ('9999999999', 'John', 'john.smith@gmail.com', '1000000', '420 Highway Lane', 'Texas'),('8888888888',	'Smith',	'smith.john@gmail.com',	'100000',	'69 Road', 'LA');
+/*!40000 ALTER TABLE `employee` ENABLE KEYS */;
+UNLOCK TABLES;
+
 DROP TABLE IF EXISTS `phone_num_emp`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `phone_num_emp` (
-  `employee_id` int(11) NOT NULL,
+  `employee_id` varchar(50) NOT NULL,
   `phone_num` varchar(50) NOT NULL,
-  PRIMARY KEY (`employee_id`,`phone_num`),
+  PRIMARY KEY (`phone_num`),
   CONSTRAINT `phone_num_esp_fk` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`employee_id`)
   ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+LOCK TABLES `phone_num_emp` WRITE;
+/*!40000 ALTER TABLE `phone_num_emp` DISABLE KEYS */;
+INSERT INTO `phone_num_emp` VALUES ('9999999999', '9898989898'),('8888888888', '8787878787');
+/*!40000 ALTER TABLE `phone_num_emp` ENABLE KEYS */;
+UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `dependent`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `dependent` (
-  `employee_id` int(11) NOT NULL,
+  `employee_id` varchar(50) NOT NULL,
   `name` varchar(100) NOT NULL,
   `relationship_type` varchar(100) NOT NULL,
   PRIMARY KEY (`employee_id`,`name`,`relationship_type`),
@@ -63,38 +75,56 @@ CREATE TABLE `dependent` (
   ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+LOCK TABLES `dependent` WRITE;
+/*!40000 ALTER TABLE `dependent` DISABLE KEYS */;
+INSERT INTO `dependent` VALUES ('9999999999', 'Johnson', 'son'),('8888888888', 'Smithson', 'son');
+/*!40000 ALTER TABLE `dependent` ENABLE KEYS */;
+UNLOCK TABLES;
+
 DROP TABLE IF EXISTS `customer`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `customer` (
-  `customer_id` int(11) NOT NULL,
+  `customer_id` varchar(50) NOT NULL,
   `name` varchar(50) NOT NULL,
   `email_address` varchar(50) NOT NULL,
   `address_line1` varchar(100) NOT NULL,
   `address_line2` varchar(100) DEFAULT NULL,
   `age` int(2) DEFAULT NULL,
   `date_of_birth` date NOT NULL,
-  `employee_id` int(11) NOT NULL,
+  `employee_id` varchar(50) NOT NULL,
   PRIMARY KEY (`customer_id`),
   CONSTRAINT `interacts_fk` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`employee_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+LOCK TABLES `customer` WRITE;
+/*!40000 ALTER TABLE `customer` DISABLE KEYS */;
+INSERT INTO `customer` VALUES ('7777777777', 'Nonidh',	'nonidh.singh@iiit.com', '420 Bakul Nivas',	'IIIT Hyderabad', '50' , '30-2-1969',	'9999999999'),('6666666666', 'Rohan', 'rohan.chako@iiit.com',	'69 Bakul Nivas', 'IIIT Hyderabad',	'50', '30-2-1969', '9999999999');
+/*!40000 ALTER TABLE `customer` ENABLE KEYS */;
+UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `phone_num_cus`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `phone_num_cus` (
-  `customer_id` int(100) NOT NULL,
+  `customer_id` varchar(50) NOT NULL,
   `phone_num` varchar(50)  NOT NULL,
-  PRIMARY KEY (`customer_id`,`phone_num`),
+  PRIMARY KEY (`phone_num`),
   CONSTRAINT `phone_num_cus_fk` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`)
   ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+LOCK TABLES `phone_num_cus` WRITE;
+/*!40000 ALTER TABLE `phone_num_cus` DISABLE KEYS */;
+INSERT INTO `phone_num_cus` VALUES ('7777777777', '987654321'),('6666666666', '9988776655');
+/*!40000 ALTER TABLE `phone_num_cus` ENABLE KEYS */;
+UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `vehicle`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `vehicle` (
-  `customer_id` int(11) UNIQUE NOT NULL,
+  `customer_id` varchar(50) UNIQUE NOT NULL,
   `vehicle_license_plate` varchar(100) NOT NULL,
   PRIMARY KEY (`vehicle_license_plate`),
   `vehicle_model` varchar(100) NOT NULL,
@@ -102,25 +132,56 @@ CREATE TABLE `vehicle` (
   ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+LOCK TABLES `vehicle` WRITE;
+/*!40000 ALTER TABLE `vehicle` DISABLE KEYS */;
+INSERT INTO `vehicle` VALUES ('7777777777', 'AA-BB-CC', 'Mercedes'),('6666666666', 'XX-YY-ZZ', 'Audi');
+/*!40000 ALTER TABLE `vehicle` ENABLE KEYS */;
+UNLOCK TABLES;
+
+DROP TABLE IF EXISTS `store`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `store` (
+  `store_id` varchar(50) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `email_address` varchar(100) NOT NULL,
+  `website_address` varchar(100) DEFAULT NULL,
+  `customer_service_website_address` varchar(100) DEFAULT NULL,
+  `location` varchar(100) NOT NULL,
+  PRIMARY KEY (`store_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+LOCK TABLES `store` WRITE;
+/*!40000 ALTER TABLE `store` DISABLE KEYS */;
+INSERT INTO `store` VALUES ('3333333333',	'Palash',	'palash@nivas.com',	'www.nivas.com/palash',	'www.service.nivas.com/palash',	'Hyderabad'), ('2222222222', 'Kadamb', 'kadamb@nivas.com', 'www.nivas.com/kadamb', 'www.service.nivas.com/kadamb', 'Gurgaon');
+/*!40000 ALTER TABLE `store` ENABLE KEYS */;
+UNLOCK TABLES;
+
 DROP TABLE IF EXISTS `product`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `product` (
-  `product_id` int(11) NOT NULL,
+  `product_id` varchar(50) NOT NULL,
   `product_name` varchar(50) NOT NULL,
-  `num_in_stock` int(11) DEFAULT NULL,
-  `price` int(11) NOT NULL,
-  `store_id` int(11) DEFAULT NULL,
+  `num_in_stock` varchar(50) DEFAULT NULL,
+  `price` varchar(50) NOT NULL,
+  `store_id` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`product_id`),
   CONSTRAINT `has_fk` FOREIGN KEY (`store_id`) REFERENCES `store` (`store_id`)
   ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+LOCK TABLES `product` WRITE;
+/*!40000 ALTER TABLE `product` DISABLE KEYS */;
+INSERT INTO `product` VALUES ('5555555555', 'CS:GO', '100', '500', '3333333333'),('4444444444', 'FIFA', '10', '3000', '2222222222');
+/*!40000 ALTER TABLE `product` ENABLE KEYS */;
+UNLOCK TABLES;
+
 DROP TABLE IF EXISTS `games`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `games` (
-  `product_id` int(11) UNIQUE NOT NULL,
+  `product_id` varchar(50) UNIQUE NOT NULL,
   `developer` varchar(50) NOT NULL,
   `genre` varchar(50) NOT NULL,
   `platform` varchar(50) NOT NULL,
@@ -132,35 +193,34 @@ CREATE TABLE `games` (
   -- CONSTRAINT `sells_fk` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-DROP TABLE IF EXISTS `store`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `store` (
-  `store_id` int(11) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `email_address` varchar(100) NOT NULL,
-  `website_address` varchar(100) DEFAULT NULL,
-  `customer_service_website_address` varchar(100) DEFAULT NULL,
-  `location` varchar(100) NOT NULL,
-  PRIMARY KEY (`store_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+LOCK TABLES `games` WRITE;
+/*!40000 ALTER TABLE `games` DISABLE KEYS */;
+INSERT INTO `games` VALUES ('5555555555', 'valve', 'FPS', 'PC', '1-1-2000', '6.9'), ('4444444444', 'EA', 'Sports', 'PS4', '2-2-2000', '9.6');
+/*!40000 ALTER TABLE `games` ENABLE KEYS */;
+UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `sells`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `sells` (
-  `employee_id` int(11) NOT NULL,
-  `customer_id` int(11) NOT NULL,
-  `store_id` int(11) NOT NULL,
-  `product_id` int(11) NOT NULL,
-  `total_price` int(11) NOT NULL,
+  `employee_id` varchar(50) NOT NULL,
+  `customer_id` varchar(50) NOT NULL,
+  `store_id` varchar(50) NOT NULL,
+  `product_id` varchar(50) NOT NULL,
+  `total_price` varchar(50) NOT NULL,
   PRIMARY KEY (`store_id`,`employee_id`,`product_id`,`customer_id`),
   CONSTRAINT `e_fk` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`employee_id`),
   CONSTRAINT `c_fk` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`),
   CONSTRAINT `s_fk` FOREIGN KEY (`store_id`) REFERENCES `store` (`store_id`),
   CONSTRAINT `p_fk` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`)
-  
+
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+LOCK TABLES `sells` WRITE;
+/*!40000 ALTER TABLE `sells` DISABLE KEYS */;
+INSERT INTO `sells` VALUES ('9999999999', '7777777777', '3333333333', '4444444444', '3000'), ('8888888888', '6666666666', '2222222222', '5555555555', '500');
+/*!40000 ALTER TABLE `sells` ENABLE KEYS */;
+UNLOCK TABLES;
 
 -- /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 -- /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

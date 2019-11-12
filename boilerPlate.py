@@ -2,6 +2,7 @@ import subprocess as sp
 import pymysql
 import pymysql.cursors
 from datetime import date
+from tabulate import tabulate
 
 # implement age using bdate
 
@@ -215,6 +216,23 @@ def addRecord():
     else:
         return
 
+def show():
+    cur.execute('show tables;')
+    tables = cur.fetchall()
+    for i in range(len(tables)):
+        print("{}. {}".format(i, tables[i]['Tables_in_Franchise']))
+    table = input("Choose the required table: ")
+    display(table)
+
+def display(table):
+    query = ("select * from {};".format(table))
+    cur.execute(query)
+    data = cur.fetchall()
+    print(tabulate(data, tablefmt = 'grid', headers = 'keys'))
+
+def dispatch(ch):
+    if ch == 1: addRecord()
+    if ch == 4: show()
 
 # Global
 while(1):
@@ -222,38 +240,39 @@ while(1):
     # username = input("Username: ")
     # password = input("Password: ")
 
-    try:
-        con = pymysql.connect(host='localhost',
-                              user='newuser',
-                              password='password',
-                              db='Franchise',
-                              cursorclass=pymysql.cursors.DictCursor)
-        tmp = sp.call('clear', shell=True)
+    #try:
+    con = pymysql.connect(host='localhost',
+                          user='akshatcx',
+                          password='01000001',
+                          db='Franchise',
+                          cursorclass=pymysql.cursors.DictCursor)
+    tmp = sp.call('clear', shell=True)
 
-        if(con.open):
-            print("Connected")
-        else:
-            print("Failed to connect")
-        tmp = input("Enter any key to CONTINUE>")
+    if(con.open):
+        print("Connected")
+    else:
+        print("Failed to connect")
+    tmp = input("Enter any key to CONTINUE>")
 
-        with con:
-            cur = con.cursor()
-            while(1):
-                tmp = sp.call('clear', shell=True)
-                print("1. Add record")
-                print("2. Fire an employee")
-                print("3. Promote an employee")
-                print("4. Employee Statistics")
-                print("5. Logout")
-                ch = int(input("Enter choice> "))
-                tmp = sp.call('clear', shell=True)
-                if ch == 5:
-                    break
-                else:
-                    dispatch(ch)
-                    tmp = input("Enter any key to CONTINUE>")
-
+    with con:
+        cur = con.cursor()
+        while(1):
+            tmp = sp.call('clear', shell=True)
+            print("1. Add record")
+            print("2. Delete a record")
+            print("3. Update a record")
+            print("4. Display records")
+            print("5. Logout")
+            ch = int(input("Enter choice> "))
+            tmp = sp.call('clear', shell=True)
+            if ch == 5:
+                break
+            else:
+                dispatch(ch)
+                tmp = input("Enter any key to CONTINUE>")
+    """
     except:
         tmp = sp.call('clear', shell=True)
         print("Connection Refused: Either username or password is incorrect or user doesn't have access to database")
         tmp = input("Enter any key to CONTINUE>")
+    """

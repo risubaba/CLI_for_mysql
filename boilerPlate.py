@@ -50,7 +50,8 @@ def addCustomer():
         row["employee_id"] = int(input("Employee id: "))
         row["Bdate"] = input("Birth Date (YYYY-MM-DD): ")
         row['age'] = 10
-        row['phone_num'] = input("Phone number: ")
+        row['phone_num'] = input("Phone number(s) in comma separated format: ")
+        phonenums=row['phone_num'].split(",")
         row['vehicle_license_plate'] = input(
             "Enter vehicle license plate if you wish to enter vehicle information, leave blank otherwise: ")
         if row['vehicle_license_plate']:
@@ -61,10 +62,12 @@ def addCustomer():
         cur.execute(query)
         con.commit()
 
-        query = """INSERT INTO phone_num_cus(customer_id,phone_num) VALUES(%d, '%s')""" % (
-            row["customer_id"], row["phone_num"])
-        cur.execute(query)
-        con.commit()
+        for i in phonenums:
+            query = """INSERT INTO phone_num_cus(employee_id,phone_num) VALUES(%d, '%s')""" % (
+                row["customer_id"], int(i))
+            cur.execute(query)
+            con.commit()
+
 
         if row['vehicle_license_plate']:
             query = """INSERT INTO vehicle(customer_id,vehicle_license_plate,vehicle_model) VALUES(%d, '%s', '%s')""" % (
@@ -92,15 +95,20 @@ def addEmployee():
         row['salary'] = int(input("salary: "))
         row["Addressline1"] = input("Address Line1: ")
         row["Addressline2"] = input("Address Line2: ")
-        row['phone_num'] = input("Phone number: ")
+        row['phone_num'] = input("Phone number(s) in comma separated format: ")
+        phonenums=row['phone_num'].split(",")
+
         query = """INSERT INTO employee(employee_id,name,email_address,salary,address_line1,address_line2)
         VALUES(%d, '%s', '%s', %d, '%s', '%s')""" % (row["employee_id"], row["name"], row["email_address"], row["salary"], row["Addressline1"], row["Addressline2"])
         cur.execute(query)
         con.commit()
-        query = """INSERT INTO phone_num_emp(employee_id,phone_num) VALUES(%d, '%s')""" % (
-            row["employee_id"], row["phone_num"])
-        cur.execute(query)
-        con.commit()
+
+        for i in phonenums:
+            query = """INSERT INTO phone_num_emp(employee_id,phone_num) VALUES(%d, '%s')""" % (
+                row["employee_id"], int(i))
+            cur.execute(query)
+            con.commit()
+
         print("Entered into database")
     except Exception as e:
         con.rollback()

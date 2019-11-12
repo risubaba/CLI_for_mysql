@@ -12,7 +12,6 @@ def calculate_age(born):
     today = date.today()
     return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
 
-
 def addCustomer():
     try:
         row = {}
@@ -193,18 +192,12 @@ def addRecord():
     print("5. Add to table sells")
     print("6. Add to table store")
     ch = int(input("Choose option: "))
-    if ch == 1:
-        addCustomer()
-    if ch == 2:
-        addDependent()
-    if ch == 3:
-        addEmployee()
-    if ch == 4:
-        addProduct()
-    if ch == 5:
-        addSells()
-    if ch == 6:
-        addStore()
+    if ch == 1: addCustomer()
+    if ch == 2: addDependent()
+    if ch == 3: addEmployee()
+    if ch == 4: addProduct()
+    if ch == 5: addSells()
+    if ch == 6: addStore()
     else:
         return
 
@@ -237,6 +230,35 @@ def delete():
         print(">>>>>>>>>>>>>", e)
 
 
+def update():
+    try:
+        cur.execute('show tables;')
+        tables = cur.fetchall()
+        for i in range(len(tables)):
+            print("{}. {}".format(i, tables[i]['Tables_in_Franchise']))
+        table = input("Choose the required table: ")
+        display(table)
+        cur.execute('show keys from {} where Key_name = "PRIMARY"'.format(table))
+        keys = []
+        for row in cur.fetchall():
+            keys.append(row['Column_name'])
+        vals = input("Enter the values of the following keys (comma separated) for the row to be updated (" + ", ".join(keys) + "): ")
+        if(len(keys) != len(vals.split(','))):
+            print("Incorrect number of values")
+            return
+        for i in range(len(keys)):
+            keys[i] = keys[i] + " = '" + vals.split(',')[i].strip() + "'"
+        column = input("Enter the field you want to update: ")
+        new_val = input("Enter the new value: ")
+        query = "UPDATE {} SET {} = '{}' WHERE ".format(table, column, new_val) + " and ".join(keys) + ";"
+        cur.execute(query)
+        con.commit()
+        print("Successfully Updated!")
+    except Exception as e:
+        con.rollbacl()
+        print("Failed to update in the database")
+        print(">>>>>>>>>>>>>>", e)
+
 def show():
     cur.execute('show tables;')
     tables = cur.fetchall()
@@ -254,47 +276,46 @@ def display(table):
 def dispatch(ch):
     if ch == 1: addRecord()
     if ch == 2: delete()
+    if ch == 3: update()
     if ch == 4: show()
 
-# Global
-while(1):
-    tmp = sp.call('clear', shell=True)
-    # username = input("Username: ")
-    # password = input("Password: ")
+def main():
+    while(1):
+        tmp = sp.call('clear', shell=True)
+        username = input("Username: ")
+        password = input("Password: ")
 
-    #try:
-    con = pymysql.connect(host='localhost',
-                          user='akshatcx',
-                          password='01000001',
-                          db='Franchise',
-                          cursorclass=pymysql.cursors.DictCursor)
-    tmp = sp.call('clear', shell=True)
+    try:
+        con = pymysql.connect(host='localhost',
+                              user='username',
+                              password='password',
+                              db='Franchise',
+                              cursorclass=pymysql.cursors.DictCursor)
+        tmp = sp.call('clear', shell=True)
 
-    if(con.open):
-        print("Connected")
-    else:
-        print("Failed to connect")
-    tmp = input("Enter any key to CONTINUE>")
+        if(con.open):
+            print("Connected")
+        else:
+            print("Failed to connect")
+        tmp = input("Enter any key to CONTINUE>")
 
-    with con:
-        cur = con.cursor()
-        while(1):
-            tmp = sp.call('clear', shell=True)
-            print("1. Add record")
-            print("2. Delete a record")
-            print("3. Update a record")
-            print("4. Display records")
-            print("5. Logout")
-            ch = int(input("Enter choice> "))
-            tmp = sp.call('clear', shell=True)
-            if ch == 5:
-                break
-            else:
-                dispatch(ch)
-                tmp = input("Enter any key to CONTINUE>")
-    """
+        with con:
+            cur = con.cursor()
+            while(1):
+                tmp = sp.call('clear', shell=True)
+                print("1. Add record")
+                print("2. Delete a record")
+                print("3. Update a record")
+                print("4. Display records")
+                print("5. Logout")
+                ch = int(input("Enter choice> "))
+                tmp = sp.call('clear', shell=True)
+                if ch == 5:
+                    break
+                else:
+                    dispatch(ch)
+                    tmp = input("Enter any key to CONTINUE>")
     except:
         tmp = sp.call('clear', shell=True)
         print("Connection Refused: Either username or password is incorrect or user doesn't have access to database")
         tmp = input("Enter any key to CONTINUE>")
-    """

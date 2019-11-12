@@ -1,4 +1,8 @@
 
+-- NOTES:
+-- In 1:M relationship we can add FK to M side
+-- Issue is in M:1 relationship where FK has been added to 1 side in SRS
+
 -- MySQL dump 10.13  Distrib 5.7.23, for Linux (x86_64)
 --
 -- Host: localhost    Database: Company
@@ -33,8 +37,17 @@ CREATE TABLE `employee` (
   `address_line1` varchar(100) NOT NULL,
   `address_line2` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`employee_id`)
-  -- KEY `Mgr_ssn` (`Mgr_ssn`),
-  -- CONSTRAINT `DEPARTMENT_ibfk_1` FOREIGN KEY (`Mgr_ssn`) REFERENCES `EMPLOYEE` (`Ssn`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+DROP TABLE IF EXISTS `phone_num_emp`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `phone_num_emp` (
+  `employee_id` int(11) NOT NULL,
+  `phone_num` int(10) NOT NULL,
+  CONSTRAINT 'compkey_phone_num_emp' PRIMARY KEY (employee_id, phone_num)
+  CONSTRAINT `assigned_employee` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`employee_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -176,7 +189,7 @@ CREATE TABLE `vehicle` (
   -- CONSTRAINT `DEPARTMENT_ibfk_1` FOREIGN KEY (`Mgr_ssn`) REFERENCES `EMPLOYEE` (`Ssn`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-DROP TABLE IF EXISTS `vehicle`;
+DROP TABLE IF EXISTS `vehiclemodel`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `vehicle` (

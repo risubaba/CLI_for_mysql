@@ -45,11 +45,21 @@ DROP TABLE IF EXISTS `phone_num_emp`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `phone_num_emp` (
   `employee_id` int(11) NOT NULL,
-  `phone_num` int(10) NOT NULL,
-  CONSTRAINT 'compkey_phone_num_emp' PRIMARY KEY (employee_id, phone_num)
-  CONSTRAINT `assigned_employee` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`employee_id`)
+  `phone_num` int(11) NOT NULL,
+  PRIMARY KEY (`employee_id`,`phone_num`),
+  CONSTRAINT `phone_num_esp_fk` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`employee_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+
+DROP TABLE IF EXISTS `dependent`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `dependent` (
+  `employee_id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `relationship_type` varchar(100) NOT NULL,
+  PRIMARY KEY (`employee_id`,`name`,`relationship_type`),
+  CONSTRAINT `dependent_fk` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`employee_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 DROP TABLE IF EXISTS `customer`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -65,8 +75,27 @@ CREATE TABLE `customer` (
   `employee_id` int(11) NOT NULL,
   PRIMARY KEY (`customer_id`),
   CONSTRAINT `interacts_fk` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`employee_id`)
-  -- KEY `Mgr_ssn` (`Mgr_ssn`),
-  -- CONSTRAINT `DEPARTMENT_ibfk_1` FOREIGN KEY (`Mgr_ssn`) REFERENCES `EMPLOYEE` (`Ssn`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+DROP TABLE IF EXISTS `phone_num_cus`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `phone_num_cus` (
+  `customer_id` int(11) NOT NULL,
+  `phone_num` int(11) NOT NULL,
+  PRIMARY KEY (`customer_id`,`phone_num`),
+  CONSTRAINT `phone_num_cus_fk` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+DROP TABLE IF EXISTS `vehicle`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `vehicle` (
+  `customer_id` int(11) UNIQUE NOT NULL,
+  `vehicle_license_plate` varchar(100) NOT NULL,
+  PRIMARY KEY (`vehicle_license_plate`),
+  `vehicle_model` varchar(100) NOT NULL,
+  CONSTRAINT `vehicle_fk` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 DROP TABLE IF EXISTS `product`;
@@ -77,16 +106,11 @@ CREATE TABLE `product` (
   `product_name` varchar(50) NOT NULL,
   `num_in_stock` int(11) DEFAULT NULL,
   `price` int(11) NOT NULL,
-  -- check this
   `store_id` int(11) DEFAULT NULL,
-  -- 
   PRIMARY KEY (`product_id`),
-  CONSTRAINT `sells_fk` FOREIGN KEY (`product_id`) REFERENCES `sells` (`employee_id`)
+  -- CONSTRAINT `sells_fk` FOREIGN KEY (`product_id`) REFERENCES `sells` (`employee_id`)
   -- check this
   CONSTRAINT `has_fk` FOREIGN KEY (`store_id`) REFERENCES `store` (`store_id`)
-  -- 
-  -- KEY `Mgr_ssn` (`Mgr_ssn`),
-  -- CONSTRAINT `DEPARTMENT_ibfk_1` FOREIGN KEY (`Mgr_ssn`) REFERENCES `EMPLOYEE` (`Ssn`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 DROP TABLE IF EXISTS `games`;
@@ -99,10 +123,8 @@ CREATE TABLE `games` (
   `platform` varchar(50) NOT NULL,
   `release_date` date NOT NULL,
   `esrb_rating` varchar(3) NOT NULL,
-  PRIMARY KEY (`product_id`),
-  CONSTRAINT `sells_fk` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`)
-  -- KEY `Mgr_ssn` (`Mgr_ssn`),
-  -- CONSTRAINT `DEPARTMENT_ibfk_1` FOREIGN KEY (`Mgr_ssn`) REFERENCES `EMPLOYEE` (`Ssn`)
+  PRIMARY KEY (`product_id`)
+  -- CONSTRAINT `sells_fk` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 DROP TABLE IF EXISTS `store`;
@@ -110,19 +132,12 @@ DROP TABLE IF EXISTS `store`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `store` (
   `store_id` int(11) NOT NULL,
--- remove this 
-  `product_id` int(11) NOT NULL,
--- 
   `name` varchar(100) NOT NULL,
   `email_address` varchar(100) NOT NULL,
   `website_address` varchar(100) DEFAULT NULL,
   `customer_service_website_address` varchar(100) DEFAULT NULL,
   `location` varchar(100) NOT NULL,
-  PRIMARY KEY (`store_id`),
-  CONSTRAINT `sells_fk` FOREIGN KEY (`product_id`) REFERENCES `sells` (`employee_id`)
-  CONSTRAINT `has_fk` FOREIGN KEY (`store_id`) REFERENCES `store` (`store_id`)
-  -- KEY `Mgr_ssn` (`Mgr_ssn`),
-  -- CONSTRAINT `DEPARTMENT_ibfk_1` FOREIGN KEY (`Mgr_ssn`) REFERENCES `EMPLOYEE` (`Ssn`)
+  PRIMARY KEY (`store_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 DROP TABLE IF EXISTS `sells`;
@@ -135,70 +150,11 @@ CREATE TABLE `sells` (
   `product_id` int(11) NOT NULL,
   `total_price` int(11) NOT NULL,
   PRIMARY KEY (`store_id`,`employee_id`,`product_id`,`customer_id`),
-  -- KEY `Mgr_ssn` (`Mgr_ssn`),
-  -- CONSTRAINT `DEPARTMENT_ibfk_1` FOREIGN KEY (`Mgr_ssn`) REFERENCES `EMPLOYEE` (`Ssn`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-
-DROP TABLE IF EXISTS `phone_num_emp`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `phone_num_emp` (
-  `employee_id` int(11) NOT NULL,
-  `phone_num` int(11) NOT NULL,
-  PRIMARY KEY (`employee_id`,`phone_num`),
-  CONSTRAINT `phone_num_esp_fk` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`employee_id`)
-  -- KEY `Mgr_ssn` (`Mgr_ssn`),
-  -- CONSTRAINT `DEPARTMENT_ibfk_1` FOREIGN KEY (`Mgr_ssn`) REFERENCES `EMPLOYEE` (`Ssn`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-DROP TABLE IF EXISTS `dependent`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `dependent` (
-  `employee_id` int(11) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `relationship_type` varchar(100) NOT NULL,
-  PRIMARY KEY (`employee_id`,`name`,`relationship_type`),
-  CONSTRAINT `dependent_fk` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`employee_id`)
-  -- KEY `Mgr_ssn` (`Mgr_ssn`),
-  -- CONSTRAINT `DEPARTMENT_ibfk_1` FOREIGN KEY (`Mgr_ssn`) REFERENCES `EMPLOYEE` (`Ssn`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-DROP TABLE IF EXISTS `phone_num_cus`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `phone_num_cus` (
-  `customer_id` int(11) NOT NULL,
-  `phone_num` int(11) NOT NULL,
-  PRIMARY KEY (`customer_id`,`phone_num`),
-  CONSTRAINT `phone_num_cus_fk` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`)
-  -- KEY `Mgr_ssn` (`Mgr_ssn`),
-  -- CONSTRAINT `DEPARTMENT_ibfk_1` FOREIGN KEY (`Mgr_ssn`) REFERENCES `EMPLOYEE` (`Ssn`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-DROP TABLE IF EXISTS `vehicle`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `vehicle` (
-  `customer_id` int(11) NOT NULL,
-  `vehicle_license_plate` varchar(100) NOT NULL,
-  PRIMARY KEY (`customer_id`,`vehicle_license_plate`),
-  CONSTRAINT `vehicle_fk` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`)
-  -- KEY `Mgr_ssn` (`Mgr_ssn`),
-  -- CONSTRAINT `DEPARTMENT_ibfk_1` FOREIGN KEY (`Mgr_ssn`) REFERENCES `EMPLOYEE` (`Ssn`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-DROP TABLE IF EXISTS `vehiclemodel`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `vehicle` (
-  `vehicle_license_plate` varchar(100) NOT NULL,
-  `vehicle_model` varchar(100) NOT NULL,
-  PRIMARY KEY (`vehicle_license_plate`),
-  CONSTRAINT `vehiclemodel_fk` FOREIGN KEY (`vehicle_license_plate`) REFERENCES `vehicle` (`vehicle_license_plate`)
-  -- KEY `Mgr_ssn` (`Mgr_ssn`),
-  -- CONSTRAINT `DEPARTMENT_ibfk_1` FOREIGN KEY (`Mgr_ssn`) REFERENCES `EMPLOYEE` (`Ssn`)
+  CONSTRAINT `e_fk` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`employee_id`),
+  CONSTRAINT `c_fk` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`),
+  CONSTRAINT `s_fk` FOREIGN KEY (`store_id`) REFERENCES `store` (`store_id`),
+  CONSTRAINT `p_fk` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`)
+  
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

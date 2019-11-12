@@ -110,14 +110,6 @@ def addDependent():
         print("Failed to insert into database")
         print(">>>>>>>>>>>>>", e)
 
-    return
-
-
-def addProduct():
-    try:
-        row = {}
-        print("Enter new product's details: ")
-        row['product_name'] = (input("Product name: "))
         row["product_id"] = int(input("product id: "))
         row["num_in_stock"] = int(input("Number of products in stock: "))
         row["price"] = int(input("Price: "))
@@ -216,6 +208,35 @@ def addRecord():
     else:
         return
 
+def delete():
+    try:
+        cur.execute('show tables;')
+        tables = cur.fetchall()
+        for i in range(len(tables)):
+            print("{}. {}".format(i, tables[i]['Tables_in_Franchise']))
+        table = input("Choose the required table: ")
+        display(table)
+        cur.execute('show keys from {} where Key_name = "PRIMARY"'.format(table))
+        keys = []
+        for row in cur.fetchall():
+            keys.append(row['Column_name'])
+        vals = input("Enter the values of the following keys (comma separated) for the row to be deleted ( " + ", ".join(keys) + "): ")
+        if(len(keys) != len(vals.split(','))):
+            print("Incorrect number of values")
+            return
+        for i in range(len(keys)):
+            keys[i] = keys[i] + " = '" + vals.split(',')[i].strip() + "'"
+        query = ("DELETE FROM {} WHERE ".format(table) + " and ".join(keys) + ";")
+        print(query)
+        cur.execute(query)
+        con.commit()
+        print("Successfully Deleted!")
+    except Exception as e:
+        con.rollback()
+        print("Failed to delete from database")
+        print(">>>>>>>>>>>>>", e)
+
+
 def show():
     cur.execute('show tables;')
     tables = cur.fetchall()
@@ -232,6 +253,7 @@ def display(table):
 
 def dispatch(ch):
     if ch == 1: addRecord()
+    if ch == 2: delete()
     if ch == 4: show()
 
 # Global

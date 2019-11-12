@@ -113,7 +113,7 @@ CREATE TABLE `product` (
   `store_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`product_id`),
   CONSTRAINT `has_fk` FOREIGN KEY (`store_id`) REFERENCES `store` (`store_id`)
-  ON DELETE CASCADEc
+  ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 DROP TABLE IF EXISTS `games`;
@@ -126,8 +126,8 @@ CREATE TABLE `games` (
   `platform` varchar(50) NOT NULL,
   `release_date` date NOT NULL,
   `esrb_rating` varchar(3) NOT NULL,
-  PRIMARY KEY (`product_id`)
-  CONSTRAINT `has_fk` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`)
+  PRIMARY KEY (`product_id`),
+  CONSTRAINT `subclass_fk` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`)
   ON DELETE CASCADE
   -- CONSTRAINT `sells_fk` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;

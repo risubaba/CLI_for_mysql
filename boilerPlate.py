@@ -139,11 +139,21 @@ def addProduct():
         row["num_in_stock"] = int(input("Number of products in stock: "))
         row["price"] = int(input("Price: "))
         row["store_id"] = int(input("Store ID: "))
+        row["genre"] = input(
+            "If product is a game, enter genre. leave blank otherwise: ")
+        if row["genre"]:
+            row["developer"] = input("Game developer: ")
+            row["platform"] = input("Game platform: ")
+            row["release_date"] = input("Game release date: ")
+            row["ESRB_rating"] = input("Game ESRB rating: ")
 
         query = """INSERT INTO product(product_id,product_name,num_in_stock, price, store_id)
         VALUES(%d, '%s', %d, %d, %d)""" % (row["product_id"], row["product_name"], row["num_in_stock"], row["price"], row["store_id"])
         cur.execute(query)
         con.commit()
+
+        query = """INSERT INTO games(product_id, developer, genre, platform, release_date, esrb_rating)
+        VALUES(%d, '%s', '%s', '%s', '%s', '%s')""" % (row["product_id", row["developer"], row["genre"], row["platform"], row["release_date"], row["esrb_rating"])
         print("Entered into database")
     except Exception as e:
         con.rollback()

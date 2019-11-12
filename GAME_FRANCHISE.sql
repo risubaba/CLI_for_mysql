@@ -48,6 +48,7 @@ CREATE TABLE `phone_num_emp` (
   `phone_num` varchar(50) NOT NULL,
   PRIMARY KEY (`employee_id`,`phone_num`),
   CONSTRAINT `phone_num_esp_fk` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`employee_id`)
+  ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 DROP TABLE IF EXISTS `dependent`;
@@ -56,9 +57,10 @@ DROP TABLE IF EXISTS `dependent`;
 CREATE TABLE `dependent` (
   `employee_id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
-  `relationship_type` varchar(100) NOT NU LL,
+  `relationship_type` varchar(100) NOT NULL,
   PRIMARY KEY (`employee_id`,`name`,`relationship_type`),
   CONSTRAINT `dependent_fk` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`employee_id`)
+  ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 DROP TABLE IF EXISTS `customer`;
@@ -85,6 +87,7 @@ CREATE TABLE `phone_num_cus` (
   `phone_num` varchar(50)  NOT NULL,
   PRIMARY KEY (`customer_id`,`phone_num`),
   CONSTRAINT `phone_num_cus_fk` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`)
+  ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 DROP TABLE IF EXISTS `vehicle`;
@@ -96,6 +99,7 @@ CREATE TABLE `vehicle` (
   PRIMARY KEY (`vehicle_license_plate`),
   `vehicle_model` varchar(100) NOT NULL,
   CONSTRAINT `vehicle_fk` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`)
+  ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 DROP TABLE IF EXISTS `product`;
@@ -108,22 +112,23 @@ CREATE TABLE `product` (
   `price` int(11) NOT NULL,
   `store_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`product_id`),
-  -- CONSTRAINT `sells_fk` FOREIGN KEY (`product_id`) REFERENCES `sells` (`employee_id`)
-  -- check this
   CONSTRAINT `has_fk` FOREIGN KEY (`store_id`) REFERENCES `store` (`store_id`)
+  ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 DROP TABLE IF EXISTS `games`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `games` (
-  `product_id` int(11) NOT NULL,
+  `product_id` int(11) UNIQUE NOT NULL,
   `developer` varchar(50) NOT NULL,
   `genre` varchar(50) NOT NULL,
   `platform` varchar(50) NOT NULL,
   `release_date` date NOT NULL,
   `esrb_rating` varchar(3) NOT NULL,
   PRIMARY KEY (`product_id`)
+  CONSTRAINT `has_fk` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`)
+  ON DELETE CASCADE
   -- CONSTRAINT `sells_fk` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

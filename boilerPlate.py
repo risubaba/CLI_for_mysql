@@ -12,32 +12,6 @@ def calculate_age(born):
     return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
 
 
-def fireAnEmployee():
-    """
-    Function to fire an employee
-    """
-    print("Not implemented")
-
-
-def promoteEmployee():
-    """
-    Function performs one of three jobs
-    1. Increases salary
-    2. Makes employee a supervisor
-    3. Makes employee a manager
-    """
-    print("Not implemented")
-
-
-def employeeStatistics():
-    """
-    Function prints a report containing
-    the number of hours per week the employee works,
-    hourly pay, projects employee works on and so on
-    """
-    print("Not implemented")
-
-
 def addCustomer():
     try:
         row = {}
@@ -240,67 +214,6 @@ def addRecord():
         addStore()
     else:
         return
-
-
-def hireAnEmployee():
-    try:
-        # Takes emplyee details as input
-        row = {}
-        print("Enter new employee's details: ")
-        name = (input("Name (Fname Minit Lname): ")).split(' ')
-        row["Fname"] = name[0]
-        row["Minit"] = name[1]
-        row["Lname"] = name[2]
-        row["Ssn"] = input("SSN: ")
-        row["Bdate"] = input("Birth Date (YYYY-MM-DD): ")
-        row["Address"] = input("Address: ")
-        row["Sex"] = input("Sex: ")
-        row["Salary"] = float(input("Salary: "))
-        row["Dno"] = int(input("Dno: "))
-
-        """
-        In addition to taking input, you are required to handle domain errors as well
-
-        For example: the SSN should be only 9 characters long
-        Sex should be only M or F
-
-        If you choose to take Super_SSN, you need to make sure the foreign key constraint is satisfied
-
-        HINT: Instead of handling all these errors yourself, you can make use of except clause to print the error returned to you by MySQL
-        """
-
-        query = "INSERT INTO EMPLOYEE(Fname, Minit, Lname, Ssn, Bdate, Address, Sex, Salary, Dno) VALUES('%s', '%c', '%s', '%s', '%s', '%s', '%c', %f, %d)" % (
-            row["Fname"], row["Minit"], row["Lname"], row["Ssn"], row["Bdate"], row["Address"], row["Sex"], row["Salary"], row["Dno"])
-
-        print(query)
-        cur.execute(query)
-        con.commit()
-
-        print("Inserted Into Database")
-
-    except Exception as e:
-        con.rollback()
-        print("Failed to insert into database")
-        print(">>>>>>>>>>>>>", e)
-
-    return
-
-
-def dispatch(ch):
-    """
-    Function that maps helper functions to option entered
-    """
-
-    if(ch == 1):
-        addRecord()
-    elif(ch == 2):
-        fireAnEmployee()
-    elif(ch == 3):
-        promoteEmployee()
-    elif(ch == 4):
-        employeeStatistics()
-    else:
-        print("Error: Invalid Option")
 
 
 # Global

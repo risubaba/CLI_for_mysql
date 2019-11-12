@@ -45,7 +45,7 @@ DROP TABLE IF EXISTS `phone_num_emp`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `phone_num_emp` (
   `employee_id` int(11) NOT NULL,
-  `phone_num` int(11) NOT NULL,
+  `phone_num` varchar(50) NOT NULL,
   PRIMARY KEY (`employee_id`,`phone_num`),
   CONSTRAINT `phone_num_esp_fk` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`employee_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -56,7 +56,7 @@ DROP TABLE IF EXISTS `dependent`;
 CREATE TABLE `dependent` (
   `employee_id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
-  `relationship_type` varchar(100) NOT NULL,
+  `relationship_type` varchar(100) NOT NU LL,
   PRIMARY KEY (`employee_id`,`name`,`relationship_type`),
   CONSTRAINT `dependent_fk` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`employee_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -70,7 +70,7 @@ CREATE TABLE `customer` (
   `email_address` varchar(50) NOT NULL,
   `address_line1` varchar(100) NOT NULL,
   `address_line2` varchar(100) DEFAULT NULL,
-  `age` int(2) NOT NULL,
+  `age` int(2) DEFAULT NULL,
   `date_of_birth` date NOT NULL,
   `employee_id` int(11) NOT NULL,
   PRIMARY KEY (`customer_id`),
@@ -81,8 +81,8 @@ DROP TABLE IF EXISTS `phone_num_cus`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `phone_num_cus` (
-  `customer_id` int(11) NOT NULL,
-  `phone_num` int(11) NOT NULL,
+  `customer_id` int(100) NOT NULL,
+  `phone_num` varchar(50)  NOT NULL,
   PRIMARY KEY (`customer_id`,`phone_num`),
   CONSTRAINT `phone_num_cus_fk` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;

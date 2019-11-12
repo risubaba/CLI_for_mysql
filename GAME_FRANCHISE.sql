@@ -113,7 +113,7 @@ CREATE TABLE `product` (
   `store_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`product_id`),
   CONSTRAINT `has_fk` FOREIGN KEY (`store_id`) REFERENCES `store` (`store_id`)
-  ON DELETE CASCADE
+  ON DELETE CASCADEc
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 DROP TABLE IF EXISTS `games`;

@@ -38,7 +38,7 @@ def addCustomer():
         con.commit()
 
         for i in phonenums:
-            query = """INSERT INTO phone_num_cus(employee_id,phone_num) VALUES(%d, '%s')""" % (
+            query = """INSERT INTO phone_num_cus(customer_id,phone_num) VALUES(%d, '%s')""" % (
                 row["customer_id"], int(i))
             cur.execute(query)
             con.commit()
@@ -51,6 +51,7 @@ def addCustomer():
             con.commit()
 
         print("Entered into database")
+        return
 
     except Exception as e:
         con.rollback()

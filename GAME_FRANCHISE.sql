@@ -222,6 +222,27 @@ INSERT INTO `sells` VALUES ('9999999999', '7777777777', '3333333333', '444444444
 /*!40000 ALTER TABLE `sells` ENABLE KEYS */;
 UNLOCK TABLES;
 
+DROP TABLE IF EXISTS `messages`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `messages` (
+  `e_id1` varchar(50) NOT NULL,
+  `e_id2` varchar(50) NOT NULL,
+  `timestamp` timestamp NOT NULL,
+  `message` varchar(50) NOT NULL,
+  PRIMARY KEY (`E_id1`,`E_id2`,`Timestamp`),
+  CONSTRAINT `e1_fk` FOREIGN KEY (`e_id1`) REFERENCES `employee` (`employee_id`) ON DELETE CASCADE,
+  CONSTRAINT `e2_fk` FOREIGN KEY (`e_id2`) REFERENCES `employee` (`employee_id`) ON DELETE CASCADE
+
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+/*LOCK TABLES `sells` WRITE; */
+/*!40000 ALTER TABLE `sells` DISABLE KEYS */;
+/*INSERT INTO `sells` VALUES ('9999999999', '7777777777', '3333333333', '4444444444', '3000'), ('8888888888', '6666666666', '2222222222', '5555555555', '500'); */
+/*!40000 ALTER TABLE `sells` ENABLE KEYS */;
+/*UNLOCK TABLES; */
+
 -- /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 -- /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
 -- /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;

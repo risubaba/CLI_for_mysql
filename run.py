@@ -2,6 +2,7 @@ import subprocess as sp
 import pymysql
 import pymysql.cursors
 from datetime import date
+from datetime import datetime
 from tabulate import tabulate
 
 # implement age using bdate
@@ -183,6 +184,24 @@ def addStore():
         print("Failed to insert into database")
         print(">>>>>>>>>>>>>", e)
 
+def addMessage():
+    try:
+        row = {}
+        print("Enter message details: ")
+        row['e1'] = (input("Employee ID 1 (from): "))
+        row['e2'] = (input("Employee ID 2 (to): "))
+        row["message"] = input("Message: ")
+
+        query = """INSERT INTO messages(e_id1, e_id2, timestamp, message)
+        VALUES('%s', '%s', '%s', '%s')""" % (row["e1"], row["e2"], datetime.now(), row["message"])
+        print(query)
+        cur.execute(query)
+        con.commit()
+        print("Entered into database")
+    except Exception as e:
+        con.rollback()
+        print("Failed to insert into database")
+        print(">>>>>>>>>>>>>", e)
 
 def addRecord():
     print("1. Add to table customer")
@@ -191,6 +210,7 @@ def addRecord():
     print("4. Add to table product")
     print("5. Add to table sells")
     print("6. Add to table store")
+    print("7. Add to table messages")
     ch = int(input("Choose option: "))
     if ch == 1: addCustomer()
     if ch == 2: addDependent()
@@ -198,6 +218,7 @@ def addRecord():
     if ch == 4: addProduct()
     if ch == 5: addSells()
     if ch == 6: addStore()
+    if ch == 7: addMessage()
     else:
         return
 
@@ -279,43 +300,42 @@ def dispatch(ch):
     if ch == 3: update()
     if ch == 4: show()
 
-def main():
-    while(1):
-        tmp = sp.call('clear', shell=True)
-        username = input("Username: ")
-        password = input("Password: ")
+while(1):
+    tmp = sp.call('clear', shell=True)
+    username = input("Username: ")
+    password = input("Password: ")
 
-    try:
-        con = pymysql.connect(host='localhost',
-                              user='username',
-                              password='password',
-                              db='Franchise',
-                              cursorclass=pymysql.cursors.DictCursor)
-        tmp = sp.call('clear', shell=True)
+    #try:
+    con = pymysql.connect(host='localhost',
+                          user=username,
+                          password=password,
+                          db='Franchise',
+                          cursorclass=pymysql.cursors.DictCursor)
+    tmp = sp.call('clear', shell=True)
 
-        if(con.open):
-            print("Connected")
-        else:
-            print("Failed to connect")
-        tmp = input("Enter any key to CONTINUE>")
+    if(con.open):
+        print("Connected")
+    else:
+        print("Failed to connect")
+    tmp = input("Enter any key to CONTINUE>")
 
-        with con:
-            cur = con.cursor()
-            while(1):
-                tmp = sp.call('clear', shell=True)
-                print("1. Add record")
-                print("2. Delete a record")
-                print("3. Update a record")
-                print("4. Display records")
-                print("5. Logout")
-                ch = int(input("Enter choice> "))
-                tmp = sp.call('clear', shell=True)
-                if ch == 5:
-                    break
-                else:
-                    dispatch(ch)
-                    tmp = input("Enter any key to CONTINUE>")
-    except:
-        tmp = sp.call('clear', shell=True)
-        print("Connection Refused: Either username or password is incorrect or user doesn't have access to database")
-        tmp = input("Enter any key to CONTINUE>")
+    with con:
+        cur = con.cursor()
+        while(1):
+            tmp = sp.call('clear', shell=True)
+            print("1. Add record")
+            print("2. Delete a record")
+            print("3. Update a record")
+            print("4. Display records")
+            print("5. Logout")
+            ch = int(input("Enter choice> "))
+            tmp = sp.call('clear', shell=True)
+            if ch == 5:
+                break
+            else:
+                dispatch(ch)
+                tmp = input("Enter any key to CONTINUE>")
+    #except:
+    #    print("Connection Refused: Either username or password is incorrect or user doesn't have access to database")
+    #    tmp = input("Enter any key to CONTINUE>")
+

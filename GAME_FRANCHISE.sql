@@ -87,7 +87,7 @@ DROP TABLE IF EXISTS `customer`;
 CREATE TABLE `customer` (
   `customer_id` varchar(50) NOT NULL,
   `name` varchar(50) NOT NULL,
-  `email_address` varchar(50) NOT NULL,
+  `email_address` varchar(50) DEFAULT NULL,
   `address_line1` varchar(100) NOT NULL,
   `address_line2` varchar(100) DEFAULT NULL,
   `age` int(2) DEFAULT NULL,
@@ -165,7 +165,7 @@ CREATE TABLE `product` (
   `product_name` varchar(50) NOT NULL,
   `num_in_stock` varchar(50) DEFAULT NULL,
   `price` varchar(50) NOT NULL,
-  `store_id` varchar(50) DEFAULT NULL,
+  `store_id` varchar(50) NOT NULL,
   PRIMARY KEY (`product_id`),
   CONSTRAINT `has_fk` FOREIGN KEY (`store_id`) REFERENCES `store` (`store_id`)
   ON DELETE CASCADE

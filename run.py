@@ -194,23 +194,43 @@ def addDependent():
 def addSells():
     try:
         row = {}
-        print("Enter new product's details: ")
+        print("Enter new transaction's details: ")
+        row["transaction_id"] = int(input("transaction id: "))
         row["employee_id"] = int(input("employee id: "))
         row["customer_id"] = int(input("customer id: "))
         row["store_id"] = int(input("store id: "))
         row["product_id"] = int(input("product id: "))
         row["total_price"] = int(input("Total price: "))
-        checkset = [1,1,1,1,1]
+        checkset = [1,1,1,1,1,1]
         if check(row,checkset)==0:
             print("Invalid values")
             return
-        stock="""SELECT num_in_stock from product where product_id=(%d)""" %(row["product_id"])
-        print(stock )
-        query = """INSERT INTO sells(employee_id,customer_id,store_id, product_id, total_price)
-        VALUES(%d, %d, %d, %d, %d)""" % (row["employee_id"], row["customer_id"], row["store_id"], row["product_id"], row["total_price"])
+        sql_select_query = """select price, num_in_stock from product where product_id = %s"""
+        cur.execute(sql_select_query, (row["product_id"],))
+        result = cur.fetchone()
+        stock = result['num_in_stock']
+        price = int(result['price'])
+        required = row["total_price"]/price
+
+        if int(required) > int(stock):
+            print("Invalid total price, not enough stock")
+            return
+        
+        query = """INSERT INTO sells(transaction_id, employee_id,customer_id,store_id, product_id, total_price)
+        VALUES(%d, %d, %d, %d, %d, %d)""" % (row["transaction_id"], row["employee_id"], row["customer_id"], row["store_id"], row["product_id"], row["total_price"])
+        cur.execute(query)
+        # con.commit()
+
+        new_val = int(stock) - int(required)
+        print(new_val)
+        table = "product"
+        column = "num_in_stock"
+        keys=row["product_id"]
+        query = "UPDATE {} SET {} = '{}' WHERE ".format(table, column, new_val) + "product_id='{}'".format(keys) + ";"
         cur.execute(query)
         con.commit()
         print("Entered into database")
+
     except Exception as e:
         con.rollback()
         print("Failed to insert into database")
@@ -354,7 +374,7 @@ def update():
         con.commit()
         print("Successfully Updated!")
     except Exception as e:
-        con.rollbacl()
+        con.rollback()
         print("Failed to update in the database")
         print(">>>>>>>>>>>>>>", e)
 

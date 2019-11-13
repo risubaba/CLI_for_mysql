@@ -165,7 +165,7 @@ CREATE TABLE `product` (
   `product_name` varchar(50) NOT NULL,
   `num_in_stock` varchar(50) DEFAULT NULL,
   `price` varchar(50) NOT NULL,
-  `store_id` varchar(50) NOT NULL,
+  `store_id` varchar(50)  NULL,
   PRIMARY KEY (`product_id`),
   CONSTRAINT `has_fk` FOREIGN KEY (`store_id`) REFERENCES `store` (`store_id`)
   ON DELETE CASCADE
@@ -203,12 +203,13 @@ DROP TABLE IF EXISTS `sells`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `sells` (
+  `transaction_id` varchar(50) NOT NULL,
   `employee_id` varchar(50) NOT NULL,
   `customer_id` varchar(50) NOT NULL,
   `store_id` varchar(50) NOT NULL,
   `product_id` varchar(50) NOT NULL,
   `total_price` varchar(50) NOT NULL,
-  PRIMARY KEY (`store_id`,`employee_id`,`product_id`,`customer_id`),
+  PRIMARY KEY (`transaction_id`),
   CONSTRAINT `e_fk` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`employee_id`) ON DELETE CASCADE,
   CONSTRAINT `c_fk` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE CASCADE,
   CONSTRAINT `s_fk` FOREIGN KEY (`store_id`) REFERENCES `store` (`store_id`) ON DELETE CASCADE,
@@ -218,7 +219,7 @@ CREATE TABLE `sells` (
 
 LOCK TABLES `sells` WRITE;
 /*!40000 ALTER TABLE `sells` DISABLE KEYS */;
-INSERT INTO `sells` VALUES ('9999999999', '7777777777', '3333333333', '4444444444', '3000'), ('8888888888', '6666666666', '2222222222', '5555555555', '500');
+INSERT INTO `sells` VALUES ('1', '9999999999', '7777777777', '3333333333', '4444444444', '3000'), ('2', '8888888888', '6666666666', '2222222222', '5555555555', '500');
 /*!40000 ALTER TABLE `sells` ENABLE KEYS */;
 UNLOCK TABLES;
 
